@@ -13,7 +13,7 @@ Welcome to the **O.XYZ Trivia App**! This app allows users to participate in a t
 
 Here is a demo of the app in action:
 
-![App Demo]([path_to_your_gif.gif](https://imgur.com/a/o1frCn2))
+![App Demo](https://imgur.com/a/o1frCn2)
 
 
 ## Installation
