@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct FinalView: View {
-    var score: Int
+    @Binding var score: Int
     var onRestart: () -> Void // Restart the quiz
     var onHome: () -> Void // Go to the initial screen
 

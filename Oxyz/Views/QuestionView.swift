@@ -14,14 +14,13 @@ struct QuestionView: View {
     let questions: [Question]
     @Binding var currentIndex: Int
     @State private var showFinalView = false
-    @State private var score = 0
-    @Binding var showQuestionView: Bool // Added binding to control navigation
+    @State private var score = 0  // Başlangıçta puan sıfır
+    @Binding var showQuestionView: Bool
     
     var body: some View {
         NavigationStack {
             
             ZStack {
-                
                 Color.black.edgesIgnoringSafeArea(.all) // Set background to black
                 
                 VStack {
@@ -29,7 +28,7 @@ struct QuestionView: View {
                     ZStack {
                         // Gradient overlay
                         LinearGradient(
-                            gradient: Gradient(colors: [.black.opacity(10), .clear]),
+                            gradient: Gradient(colors: [.black.opacity(0.1), .clear]),
                             startPoint: .top,
                             endPoint: .bottom
                         )
@@ -42,24 +41,30 @@ struct QuestionView: View {
                             .frame(width: 200, height: 200)
                             .scaleEffect(5)
                     }
-                   
+
+                    // Show question text
                     Text(questions[currentIndex].text)
                         .font(OxyzTypography.displayMedium)
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)  // Ensure the text takes full width
                         .lineLimit(nil)              // Allow text to wrap
-                        .fixedSize(horizontal: false, vertical: true) // Allow the text to expand vertically if needed
+                        .fixedSize(horizontal: false, vertical: true)
                     
+                    // Answer buttons
                     ForEach(questions[currentIndex].answers.indices, id: \.self) { index in
                         Button(action: {
-                            if index == questions[currentIndex].answers.firstIndex(where: { $0.isCorrect }) {
+                            // Check if the selected answer is correct
+                            if questions[currentIndex].answers[index].isCorrect {
                                 score += 1
                             }
                             
+                            // Move to the next question or show final view if it's the last one
                             if currentIndex < questions.count - 1 {
                                 currentIndex += 1
                             } else {
+                               
+                                // When all questions are answered, show the final view
                                 DispatchQueue.main.async {
                                     showFinalView = true
                                 }
@@ -67,32 +72,39 @@ struct QuestionView: View {
                         }) {
                             Text(questions[currentIndex].answers[index].text)
                                 .font(OxyzTypography.buttonText)
-                            
-                                        .frame(height: 50)
-                                        .frame(maxWidth: .infinity)
-                                       .background(Color.clear)  // Şeffaf arka plan
-                                       .foregroundColor(.white)  // Metin rengi beyaz
-                                       .overlay(
-                                          Rectangle()
-                                               .stroke(Color.white, lineWidth: 1)  // Kenarlık çizgisi
-                                       )
-                                       .padding(4)
-                                       .shadow(radius: 5)  // Gölgeleme
+                                .frame(height: 50)
+                                .frame(maxWidth: .infinity)
+                                .background(Color.clear)  // Transparent background
+                                .foregroundColor(.white)  // White text color
+                                .overlay(
+                                    Rectangle()
+                                        .stroke(Color.white, lineWidth: 1)  // Border
+                                )
+                                .padding(4)
+                                .shadow(radius: 5)  // Shadow
                         }
                         .padding(.horizontal, 20) // Improve button spacing
                     }
                 }
-                
                 .padding()
             }
         }
+        .onAppear {
+            // Sıfırlama işlemleri burada yapılacak
+            score = 0
+            currentIndex = 0
+        }
         .fullScreenCover(isPresented: $showFinalView) {
-            FinalView(score: score, onRestart: {
+            FinalView(score: $score, onRestart: {
+                // Reset quiz and score
                 currentIndex = 0
-                score = 0
+                score = 0  // Reset score
                 showFinalView = false
             }, onHome: {
-                showQuestionView = false // Correctly dismisses the QuestionView
+                // Reset to home screen and score
+                currentIndex = 0
+                score = 0  // Reset score
+                showQuestionView = false
             })
         }
     }
