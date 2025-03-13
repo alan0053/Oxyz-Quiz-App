@@ -105,7 +105,7 @@ class QuestionService {
                 text: "What is the name of the cryptocurrency related to O.XYZ?",
                 category: "O.XYZ",
                 answers: [
-                    Answer(text: "O.XYZ OCOIN", isCorrect: true),
+                    Answer(text: "O Intelligence COIN", isCorrect: true),
                     Answer(text: "OXYX COIN", isCorrect: false),
                     Answer(text: "XYZ COIN", isCorrect: false),
                     Answer(text: "O COIN", isCorrect: false)
